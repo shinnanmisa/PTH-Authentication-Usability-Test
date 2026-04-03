@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PTH Authentication - Usability Testing System</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .phase-indicator {
+      text-align: center;
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 30px;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 6px;
+    }
+    .phase-indicator .current {
+      color: #007bff;
+      font-weight: bold;
+    }
+    .mode-card {
+      border: 3px solid #ddd;
+      border-radius: 12px;
+      padding: 30px;
+      margin: 15px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: white;
+    }
+    .mode-card:hover {
+      border-color: #007bff;
+      box-shadow: 0 4px 12px rgba(0,123,255,0.2);
+      transform: translateY(-2px);
+    }
+    .mode-card h3 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    .canvas-container {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+    }
+    canvas {
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      background: #fff;
+      touch-action: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .sequence-display {
+      background: #e3f2fd;
+      border: 2px solid #2196f3;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .sequence-display h3 {
+      margin: 0 0 10px 0;
+      color: #1976d2;
+    }
+    .sequence-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      letter-spacing: 2px;
+    }
+    .hint-text {
+      font-size: 20px;
+      font-weight: bold;
+      color: #e91e63;
+      margin: 20px 0;
+      text-align: center;
+      padding: 15px;
+      background: #fce4ec;
+      border-radius: 8px;
+      border: 2px solid #e91e63;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 30px;
+      background: #e0e0e0;
+      border-radius: 15px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4caf50, #8bc34a);
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .button-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
+    }
+    .btn-primary {
+      background: #007bff;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+    }
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #218838;
+    }
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #545b62;
+    }
+    .stats-box {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+    .stats-row:last-child {
+      border-bottom: none;
+    }
+    .stats-label {
+      font-weight: 600;
+      color: #495057;
+    }
+    .stats-value {
+      color: #212529;
+      font-weight: bold;
+    }
+    .timer {
+      font-size: 32px;
+      text-align: center;
+      color: #007bff;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      margin: 20px 0;
+      padding: 15px;
+      background: #e7f3ff;
+      border-radius: 8px;
+    }
+    .feedback {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .feedback.success {
+      background: #d4edda;
+      color: #155724;
+      border: 2px solid #28a745;
+    }
+    .feedback.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 2px solid #dc3545;
+    }
+    .step-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    .step-item {
+      width: 56px;
+      height: 56px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      background: white;
+    }
+    .step-item.completed {
+      border-color: #28a745;
+      background: #d4edda;
+    }
+    .step-item.current {
+      border-color: #007bff;
+      background: #e7f3ff;
+      box-shadow: 0 0 12px rgba(0,123,255,0.5);
+    }
+    .hidden {
+      display: none !important;
+    }
+    .input-sequence-display {
+      font-family: monospace;
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 4px;
+    }
+    .questionnaire {
+      margin: 30px 0;
+    }
+    .question {
+      margin: 25px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .question h4 {
+      margin-top: 0;
+      color: #495057;
+    }
+    .likert-scale {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .likert-option {
+      flex: 1;
+      text-align: center;
+    }
+    .likert-option input[type="radio"] {
+      display: block;
+      margin: 0 auto 8px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .likert-option label {
+      display: block;
+      font-size: 12px;
+      color: #666;
+    }
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .retest-info {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .retest-token {
+      font-size: 24px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      color: #856404;
+      margin: 15px 0;
+      padding: 10px;
+      background: white;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔒 PTH Authentication Usability Test 可用性測試</h1>
+    
+    <!-- Phase Indicator -->
+    <div class="phase-indicator">
+      <span id="phaseText">準備開始 Ready to start</span>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen">
+      <div style="background: #e3f2fd; padding: 30px; border-radius: 12px; margin: 30px 0;">
+        <h2 style="text-align: center; color: #1976d2;">歡迎參與可用性測試！ Welcome to the Usability Test!</h2>
+        <p style="font-size: 16px; line-height: 1.8; color: #333;">
+          本測試旨在評估 Pattern-Tap Hybrid (PTH) 認證系統的可用性與記憶性。<br>
+          This test evaluates the usability and memorability of the Pattern-Tap Hybrid (PTH) authentication system.<br><br>
+          <strong>第一階段：記憶密碼 Phase 1: Memorization</strong><br>
+          系統會隨機生成一組密碼序列，請仔細記住它。<br>
+          The system will generate a password sequence. Please memorize it carefully.<br><br>
+          <strong>第二階段：引導練習（3次） Phase 2: Guided Practice (3 attempts)</strong><br>
+          系統會依照順序顯示提示，請跟隨提示進行輸入。<br>
+          The system will show step-by-step hints. Please follow them to input your password.<br><br>
+          <strong>第三階段：干擾任務 Phase 3: Distraction Task</strong><br>
+          您需要完成簡單的數學題，清除短期記憶。<br>
+          You will solve simple math problems to clear short-term memory.<br><br>
+          <strong>第四階段：憑空回憶測試（5次） Phase 4: Recall Test (5 attempts)</strong><br>
+          螢幕上不顯示任何提示。請憑記憶輸入密碼，完成後點擊提交。系統會記錄您的反應時間與準確度。<br>
+          No hints will be shown. Please enter the password from memory and submit. The system records your response time and accuracy.
+        </p>
+      </div>
+      
+      <div style="text-align: center; margin-top: 30px;">
+        <label style="font-size: 16px; margin-bottom: 15px; display: block;">
+          <strong>請輸入您的測試編號（例如：P001）：Please enter your participant ID (e.g., P001):</strong>
+        </label>
+        <input type="text" id="participantId" placeholder="P001" style="padding: 10px; font-size: 16px; width: 200px; border: 2px solid #007bff; border-radius: 6px; text-align: center;">
+      </div>
+      
+      <div class="button-group" style="margin-top: 30px;">
+        <button class="btn-primary" onclick="startTest()" style="font-size: 18px; padding: 15px 40px;">開始測試 Start Test</button>
+      </div>
+    </div>
+
+    <!-- Mode Selection (Hidden - automatic) -->
+    <div id="modeScreen" class="hidden">
+      <h2 style="text-align: center;">系統已為您分配測試模式 Test mode assigned</h2>
+      <div id="assignedMode" style="text-align: center; font-size: 20px; margin: 30px 0; padding: 20px; background: #e3f2fd; border-radius: 8px;">
+        <strong id="modeText">正在分配... Assigning...</strong>
+      </div>
+      <div class="button-group">
+        <button class="btn-success" onclick="proceedWithMode()">繼續 Continue</button>
+      </div>
+    </div>
+
+    <!-- Create Password Screen (for 'create' mode) -->
+    <div id="createScreen" class="hidden">
+      <h2 style="text-align: center;">創建您的密碼 Create Your Password</h2>
+      <p style="text-align: center; color: #666;">請創建一組您認為易於記憶的密碼序列（8-12步） Please create a password sequence you find memorable (8-12 steps)</p>
+      
+      <div class="sequence-display">
+        <h3>您創建的密碼 Your Created Password</h3>
+        <div class="sequence-text" id="createSequence">（尚未創建） (Not created yet)</div>
+        <div style="margin-top: 15px; color: #666;">
+          長度 Length: <strong id="createLength">0</strong> ・ 熵值 Entropy: <strong id="createEntropy">0</strong> bits
+        </div>
+      </div>
+      
+      <div class="step-grid" id="createSteps"></div>
+      
+      <div class="canvas-container">
+        <canvas id="createCanvas" width="360" height="360"></canvas>
+      </div>
+      
+      <div class="input-sequence-display" id="createInput">您的輸入 Your input:</div>
+      
+      <div class="button-group">
+        <button class="btn-secondary" onclick="clearCurrentInput()">清除 Clear</button>
+        <button class="btn-danger" onclick="resetCreate()">重新創建 Reset</button>
+        <button class="btn-success" onclick="confirmCreate()" id="confirmCreateBtn" disabled>確認密碼 Confirm Password</button>
+      </div>
+      
+      <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 14px; color: #856404;">
+        💡 <strong>提示 Tips:</strong>
+        <ul style="margin: 10px 0;">
+          <li>Pattern（模式）：按住不放（>220ms）然後拖動連接圓點（至少4個） / Hold (>220ms) and drag through at least 4 nodes.</li>
+          <li>Tap（點擊）：在中間格子快速點擊 / Quickly tap a middle cell.</li>
+          <li>建議 8-12 步，混合使用 Pattern 和 Tap / Recommended: 8-12 steps with both Pattern and Tap.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Memorization Phase -->
+    <div id="memorizationScreen" class="hidden">
+      <div class="sequence-display">
+        <h3 id="memorizationTitle">📝 請記住這組密碼 Please memorize this password</h3>
+        <div class="sequence-text" id="generatedSequence"></div>
+        <div style="margin-top: 15px; color: #666;">
+          Entropy: <strong id="sequenceEntropy">0</strong> bits
+        </div>
+      </div>
+      
+      <div class="step-grid" id="memorizationSteps"></div>
+      
+      <div style="text-align: center; margin: 30px 0; font-size: 16px; color: #666;">
+        <p>請花時間記住這組密碼，準備好後點擊「我記住了」開始練習<br>Take your time to memorize this password, then click "I memorized it" to start practice.</p>
+        <p style="margin-top: 10px;">💡 建議：觀察模式的形狀和順序 / Tip: focus on shape and order.</p>
+      </div>
+      
+      <div class="button-group">
+        <button class="btn-secondary" onclick="generateAndShowSequence()">↻ 重新生成一組 Regenerate</button>
+        <button class="btn-success" onclick="startPractice()">我記住了，開始練習 I Memorized It</button>
+      </div>
+    </div>
+
+    <!-- Practice Phase -->
+    <div id="practiceScreen" class="hidden">
+      <div class="progress-bar">
+        <div class="progress-fill" id="practiceProgress">練習 Practice 0/3</div>
+      </div>
+      
+      <div class="hint-text" id="hintText">準備開始... Getting ready...</div>
+      
+      <div class="step-grid" id="practiceSteps"></div>
+      
+      <div class="canvas-container">
+        <canvas id="practiceCanvas" width="360" height="360"></canvas>
+      </div>
+      
+      <div class="input-sequence-display" id="practiceInput">您的輸入 Your input:</div>
+      
+      <div class="button-group">
+        <button class="btn-secondary" onclick="clearCurrentInput()">清除 Clear</button>
+        <button class="btn-danger" onclick="showSequenceAgain()">再次查看密碼 Show Password Again</button>
+      </div>
+      
+      <div id="practiceFeedback"></div>
+    </div>
+
+    <!-- Distraction Phase -->
+    <div id="distractionScreen" class="hidden">
+      <div style="background: #e3f2fd; padding: 30px; border-radius: 12px; margin: 30px 0; text-align: center;">
+        <h2 style="color: #1976d2;">🧠 中場休息任務 Distraction Task</h2>
+        <p style="font-size: 16px; line-height: 1.8; color: #333;">
+          在進入測驗前，請完成一分鐘的簡單數學題。<br>
+          Please complete one minute of simple math problems before the test.<br>
+          這將幫助我們測試您真正的記憶效果，這在學術界稱為「干擾任務 (Distraction Task)」。<br>
+          This helps us evaluate true memory performance through a distraction task.
+        </p>
+        <div class="timer" id="distractionTimer">01:00</div>
+        
+        <div style="margin: 30px 0; font-size: 48px; font-weight: bold; color: #2c3e50; letter-spacing: 2px;" id="mathProblem">
+          15 + 27 = ?
+        </div>
+        
+        <input type="number" id="mathAnswer" style="padding: 15px; font-size: 24px; width: 150px; text-align: center; border: 2px solid #007bff; border-radius: 8px;" autocomplete="off" inputmode="numeric">
+        
+        <div style="margin-top: 20px;">
+          <button class="btn-primary" onclick="checkMathAnswer()">提交答案 Submit</button>
+        </div>
+        
+        <div id="mathFeedback" style="margin-top: 20px; font-weight: bold; font-size: 20px; height: 30px;"></div>
+      </div>
+    </div>
+
+    <!-- Test Phase -->
+    <div id="testScreen" class="hidden">
+      <div class="progress-bar">
+        <div class="progress-fill" id="testProgress">測試 Test 0/5</div>
+      </div>
+      
+      <div class="timer" id="timer">00:00.00</div>
+      
+      <div class="step-grid" id="testSteps"></div>
+      
+      <div class="canvas-container">
+        <canvas id="testCanvas" width="360" height="360"></canvas>
+      </div>
+      
+      <div class="input-sequence-display" id="testInput">您的輸入 Your input:</div>
+      
+      <div class="stats-box">
+        <div class="stats-row">
+          <span class="stats-label">當前嘗試 Current attempt:</span>
+          <span class="stats-value" id="currentAttempt">1/5</span>
+        </div>
+        <div class="stats-row">
+          <span class="stats-label">已成功 Success count:</span>
+          <span class="stats-value" id="successCount">0</span>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button class="btn-secondary" onclick="clearCurrentInput()">清除重填 Clear</button>
+        <button class="btn-success" onclick="submitTestPassword()">提交密碼 Submit Password</button>
+      </div>
+      
+      <div id="testFeedback"></div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="hidden">
+      <h2 style="text-align: center; color: #28a745;">✅ 測試完成！感謝您的參與 Test Complete! Thank you!</h2>
+
+      <div class="sequence-display">
+        <h3>測試密碼 Password Used</h3>
+        <div class="sequence-text" id="finalSequenceText">-</div>
+      </div>
+
+      <div class="step-grid" id="finalSequenceSteps"></div>
+      
+      <div class="stats-box">
+        <h3 style="margin-top: 0;">測試統計 Test Summary</h3>
+        <div class="stats-row">
+          <span class="stats-label">參與者編號 Participant ID:</span>
+          <span class="stats-value" id="finalParticipantId">-</span>
+        </div>
+        <div class="stats-row" style="display: none;">
+          <span class="stats-label">測試模式 Test Mode:</span>
+          <span class="stats-value" id="finalMode">-</span>
+        </div>
+        <div class="stats-row">
+          <span class="stats-label">成功次數 Successes:</span>
+          <span class="stats-value" id="finalSuccess">-</span>
+        </div>
+        <div class="stats-row">
+          <span class="stats-label">平均時間 Average Time:</span>
+          <span class="stats-value" id="finalAvgTime">-</span>
+        </div>
+        <div class="stats-row">
+          <span class="stats-label">成功率 Success Rate:</span>
+          <span class="stats-value" id="finalSuccessRate">-</span>
+        </div>
+      </div>
+
+      <div class="button-group" style="margin-top: 30px;">
+        <button class="btn-success" onclick="downloadResults()">下載測試數據 Download Data</button>
+        <button class="btn-primary" onclick="location.reload()">結束測試 End Test</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="user_test_v2.js"></script>
+</body>
+</html>
